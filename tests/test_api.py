@@ -18,3 +18,12 @@ def test_context_endpoint(client):
     assert response.status_code == 200
     data = response.json()
     assert "buildings" in data
+
+def test_validation_error(client):
+    # Latitude out of range
+    response = client.get("/weather?lat=100&lon=77.21")
+    assert response.status_code == 422
+    
+    # Longitude out of range
+    response = client.get("/weather?lat=28.61&lon=200")
+    assert response.status_code == 422

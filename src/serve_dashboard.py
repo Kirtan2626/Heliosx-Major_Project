@@ -1,28 +1,23 @@
 from contextlib import asynccontextmanager
+from typing import Annotated
 import httpx
-from fastapi import FastAPI, Depends
+from fastapi import FastAPI, Depends, Request, Query
 from fastapi.middleware.cors import CORSMiddleware
 from src.models import CoordinatesRequest, UnifiedEnvironmentalPayload
 from src.weather_service import WeatherService
 from src.site_context import SiteContextService
 
-# Shared state to hold the client
-class AppState:
-    def __init__(self):
-        self.client: httpx.AsyncClient = None
-
-state = AppState()
-
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     # Set up the shared client
-    state.client = httpx.AsyncClient(timeout=10.0)
-    yield
-    # Clean up the shared client
-    await state.client.aclose()
+    async with httpx.AsyncClient(timeout=10.0) as client:
+        app.state.client = client
+        yield
+    # Clean up is handled by async with block
 
 app = FastAPI(title="Helios-X API Gateway", lifespan=lifespan)
 
+# Restrict CORS Origins in production. Using * for development convenience.
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
@@ -32,8 +27,8 @@ app.add_middleware(
 )
 
 # Dependency Injection helpers
-def get_http_client():
-    return state.client
+def get_http_client(request: Request) -> httpx.AsyncClient:
+    return request.app.state.client
 
 def get_weather_service(client: httpx.AsyncClient = Depends(get_http_client)):
     return WeatherService(client=client)
@@ -41,10 +36,14 @@ def get_weather_service(client: httpx.AsyncClient = Depends(get_http_client)):
 def get_context_service(client: httpx.AsyncClient = Depends(get_http_client)):
     return SiteContextService(client=client)
 
+# Validated coordinates
+LatQuery = Annotated[float, Query(description="Latitude (-90 to 90)", ge=-90, le=90)]
+LonQuery = Annotated[float, Query(description="Longitude (-180 to 180)", ge=-180, le=180)]
+
 @app.get("/weather", response_model=UnifiedEnvironmentalPayload)
 async def get_weather(
-    lat: float, 
-    lon: float, 
+    lat: LatQuery, 
+    lon: LonQuery, 
     weather_svc: WeatherService = Depends(get_weather_service)
 ):
     req = CoordinatesRequest(lat=lat, lon=lon)
@@ -52,14 +51,17 @@ async def get_weather(
 
 @app.get("/site-context")
 async def get_site_context(
-    lat: float, 
-    lon: float, 
+    lat: LatQuery, 
+    lon: LonQuery, 
     context_svc: SiteContextService = Depends(get_context_service)
 ):
     req = CoordinatesRequest(lat=lat, lon=lon)
     return await context_svc.get_context(req)
 
 @app.post("/simulate")
-async def simulate(lat: float, lon: float):
+async def simulate(
+    lat: LatQuery, 
+    lon: LonQuery
+):
     # Stub for future physics engine loop
     return {"status": "Simulation dispatched. Not fully implemented yet."}

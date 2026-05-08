@@ -1,13 +1,20 @@
 import pytest
 import httpx
-from unittest.mock import AsyncMock, patch, MagicMock
+from unittest.mock import AsyncMock, MagicMock
 from src.weather_service import WeatherService
 from src.models import CoordinatesRequest, UnifiedEnvironmentalPayload
 from datetime import datetime
 
+@pytest.fixture
+def mock_client():
+    return AsyncMock(spec=httpx.AsyncClient)
+
+@pytest.fixture
+def service(mock_client):
+    return WeatherService(client=mock_client)
+
 @pytest.mark.asyncio
-async def test_fetch_weather_happy_path():
-    service = WeatherService()
+async def test_fetch_weather_happy_path(service, mock_client):
     req = CoordinatesRequest(lat=28.61, lon=77.21)
     
     mock_response_data = {
@@ -19,39 +26,36 @@ async def test_fetch_weather_happy_path():
         }
     }
     
-    with patch("httpx.AsyncClient.get", new_callable=AsyncMock) as mock_get:
-        mock_resp = MagicMock(spec=httpx.Response)
-        mock_resp.status_code = 200
-        mock_resp.json.return_value = mock_response_data
-        mock_resp.raise_for_status.return_value = None
-        mock_get.return_value = mock_resp
-        
-        payload = await service.get_weather(req)
-        
-        assert payload.temperatureC == 25.5
-        assert payload.humidityPercent == 60
-        assert payload.windSpeed == 5.2
-        assert payload.cloudCoverPercent == 20
-        assert payload.source == "Open-Meteo"
-        assert isinstance(payload.fetchedAt, datetime)
-
-@pytest.mark.asyncio
-async def test_fetch_weather_fallback_on_error():
-    service = WeatherService()
-    req = CoordinatesRequest(lat=28.61, lon=77.21)
+    mock_resp = MagicMock(spec=httpx.Response)
+    mock_resp.status_code = 200
+    mock_resp.json.return_value = mock_response_data
+    mock_resp.raise_for_status.return_value = None
+    mock_client.get.return_value = mock_resp
     
-    with patch("httpx.AsyncClient.get", new_callable=AsyncMock) as mock_get:
-        mock_get.side_effect = httpx.ConnectError("Connection failed")
-        
-        payload = await service.get_weather(req)
-        
-        assert payload.source == "Fallback"
-        assert payload.temperatureC == 35.0
-        assert isinstance(payload.fetchedAt, datetime)
+    payload = await service.get_weather(req)
+    
+    assert payload.temperatureC == 25.5
+    assert payload.humidityPercent == 60
+    assert payload.windSpeed == 5.2
+    assert payload.cloudCoverPercent == 20
+    assert payload.source == "Open-Meteo"
+    assert isinstance(payload.fetchedAt, datetime)
+    mock_client.get.assert_called_once()
 
 @pytest.mark.asyncio
-async def test_fetch_weather_cache_usage():
-    service = WeatherService()
+async def test_fetch_weather_fallback_on_error(service, mock_client):
+    req = CoordinatesRequest(lat=28.61, lon=77.21)
+    mock_client.get.side_effect = httpx.ConnectError("Connection failed")
+    
+    payload = await service.get_weather(req)
+    
+    assert payload.source == "Fallback"
+    assert payload.temperatureC == 35.0
+    assert isinstance(payload.fetchedAt, datetime)
+    mock_client.get.assert_called_once()
+
+@pytest.mark.asyncio
+async def test_fetch_weather_cache_usage(service, mock_client):
     req = CoordinatesRequest(lat=28.61, lon=77.21)
     
     mock_response_data = {
@@ -63,18 +67,17 @@ async def test_fetch_weather_cache_usage():
         }
     }
     
-    with patch("httpx.AsyncClient.get", new_callable=AsyncMock) as mock_get:
-        mock_resp = MagicMock(spec=httpx.Response)
-        mock_resp.status_code = 200
-        mock_resp.json.return_value = mock_response_data
-        mock_resp.raise_for_status.return_value = None
-        mock_get.return_value = mock_resp
-        
-        # First call - should hit mock
-        payload1 = await service.get_weather(req)
-        assert mock_get.call_count == 1
-        
-        # Second call - should hit cache
-        payload2 = await service.get_weather(req)
-        assert mock_get.call_count == 1
-        assert payload1 is payload2
+    mock_resp = MagicMock(spec=httpx.Response)
+    mock_resp.status_code = 200
+    mock_resp.json.return_value = mock_response_data
+    mock_resp.raise_for_status.return_value = None
+    mock_client.get.return_value = mock_resp
+    
+    # First call - should hit mock
+    payload1 = await service.get_weather(req)
+    assert mock_client.get.call_count == 1
+    
+    # Second call - should hit cache
+    payload2 = await service.get_weather(req)
+    assert mock_client.get.call_count == 1
+    assert payload1 == payload2

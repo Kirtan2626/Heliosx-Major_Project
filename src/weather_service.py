@@ -6,10 +6,10 @@ import logging
 logger = logging.getLogger(__name__)
 
 class WeatherService:
-    def __init__(self, client: httpx.AsyncClient = None):
+    def __init__(self, client: httpx.AsyncClient):
         """
         Initialize the service.
-        :param client: Optional httpx.AsyncClient to reuse. If not provided, one will be created lazily.
+        :param client: Required httpx.AsyncClient to reuse.
         """
         self.client = client
         self._cache = {}
@@ -21,11 +21,7 @@ class WeatherService:
             return self._cache[cache_key]
 
         try:
-            if self.client:
-                return await self._fetch_weather(self.client, coords, cache_key)
-            else:
-                async with httpx.AsyncClient(timeout=5.0) as client:
-                    return await self._fetch_weather(client, coords, cache_key)
+            return await self._fetch_weather(self.client, coords, cache_key)
         except (httpx.RequestError, httpx.HTTPStatusError) as e:
             logger.error(f"Weather API failed: {e}")
             return self._safe_fallback()

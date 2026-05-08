@@ -9,10 +9,10 @@ logger = logging.getLogger(__name__)
 class SiteContextService:
     CACHE_LIMIT = 100
 
-    def __init__(self, client: httpx.AsyncClient = None):
+    def __init__(self, client: httpx.AsyncClient):
         """
         Initialize the service.
-        :param client: Optional httpx.AsyncClient to reuse. If not provided, one will be created lazily.
+        :param client: Required httpx.AsyncClient to reuse.
         """
         self.client = client
         # Cache mapping (lat, lon) rounded to 5 decimal places to results
@@ -45,9 +45,6 @@ class SiteContextService:
         """
         
         try:
-            if self.client is None:
-                self.client = httpx.AsyncClient(timeout=10.0)
-            
             resp = await self.client.post(overpass_url, data={"data": query})
             resp.raise_for_status()
             data = resp.json()
