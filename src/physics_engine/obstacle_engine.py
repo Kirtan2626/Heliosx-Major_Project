@@ -13,9 +13,9 @@ def polar_to_vector(alt_deg: float, az_deg: float) -> tuple:
 def point_in_polygon(x, y, poly):
     n = len(poly)
     inside = False
-    p1x, p1y = poly[0]
-    for i in range(n + 1):
-        p2x, p2y = poly[i % n]
+    for i in range(n):
+        p1x, p1y = poly[i]
+        p2x, p2y = poly[(i + 1) % n]
         if y > min(p1y, p2y):
             if y <= max(p1y, p2y):
                 if x <= max(p1x, p2x):
@@ -23,15 +23,15 @@ def point_in_polygon(x, y, poly):
                         xints = (y - p1y) * (p2x - p1x) / (p2y - p1y) + p1x
                     if p1x == p2x or x <= xints:
                         inside = not inside
-        p1x, p1y = p2x, p2y
     return inside
 
 def check_intersection(sun_vec: tuple, obstacle: dict, max_distance: float = 200.0) -> bool:
     # Ray origin is (0,0,0)
     sx, sy, sz = sun_vec
     
-    if sz <= 0:
-        return True # Sun is below horizon
+    # Use a small epsilon to avoid division by zero or extremely large values
+    if sz <= 1e-9:
+        return True # Sun is below or very close to horizon
         
     z_height = obstacle.get("z_height", 0.0)
     if z_height <= 0:
