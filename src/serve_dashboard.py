@@ -6,6 +6,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from src.models import CoordinatesRequest, UnifiedEnvironmentalPayload, LatQuery, LonQuery
 from src.weather_service import WeatherService
 from src.site_context import SiteContextService
+from src.heliosx_sim_server import run_simulation
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
@@ -57,7 +58,13 @@ async def get_site_context(
 @app.post("/simulate")
 async def simulate(
     lat: LatQuery, 
-    lon: LonQuery
+    lon: LonQuery,
+    weather_svc: WeatherService = Depends(get_weather_service),
+    context_svc: SiteContextService = Depends(get_context_service)
 ):
-    # Stub for future physics engine loop
-    return {"status": "Simulation dispatched. Not fully implemented yet."}
+    req = CoordinatesRequest(lat=lat, lon=lon)
+    weather = await weather_svc.get_weather(req)
+    context = await context_svc.get_context(req)
+    
+    result = run_simulation(lat, lon, weather.model_dump(), context)
+    return result
