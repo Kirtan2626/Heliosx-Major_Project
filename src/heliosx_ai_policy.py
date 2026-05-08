@@ -1,9 +1,9 @@
 import logging
 import math
+import numpy as np
 
 try:
     import torch
-    import numpy as np
     TORCH_AVAILABLE = True
 except ImportError:
     TORCH_AVAILABLE = False
@@ -59,7 +59,7 @@ class HeliosXPolicy:
         ], dtype=np.float32)
         
         if TORCH_AVAILABLE:
-            return torch.FloatTensor(state_arr).unsqueeze(0) # Shape: (1, 14)
+            return torch.tensor(state_arr, dtype=torch.float32).unsqueeze(0) # Shape: (1, 14)
         return state_arr
 
     def _fallback_policy(self, raw_state: dict) -> dict:
@@ -67,4 +67,34 @@ class HeliosXPolicy:
         return {"action_id": 3, "tilt_bias": 0, "azimuth_bias": 0, "mode": "identity"}
         
     def _inference(self, raw_state: dict) -> dict:
-        raise NotImplementedError()
+        state_tensor = self._construct_state(raw_state)
+        try:
+            with torch.no_grad():
+                q_values = self.model(state_tensor)
+                action_id = torch.argmax(q_values).item()
+        except Exception as e:
+            logger.error(f"Inference failed: {e}. Using fallback.")
+            return self._fallback_policy(raw_state)
+            
+        return self._decode_action(action_id)
+
+    def _decode_action(self, action_id: int) -> dict:
+        # Mapping based on 13 Dimensions Discrete space doc
+        mapping = {
+            0: {"tilt_bias": -15, "azimuth_bias": 0, "mode": "tracking"},
+            1: {"tilt_bias": -10, "azimuth_bias": 0, "mode": "tracking"},
+            2: {"tilt_bias": -5,  "azimuth_bias": 0, "mode": "tracking"},
+            3: {"tilt_bias": 0,   "azimuth_bias": 0, "mode": "identity"},
+            4: {"tilt_bias": 5,   "azimuth_bias": 0, "mode": "tracking"},
+            5: {"tilt_bias": 10,  "azimuth_bias": 0, "mode": "tracking"},
+            6: {"tilt_bias": 15,  "azimuth_bias": 0, "mode": "tracking"},
+            7: {"tilt_bias": 0,   "azimuth_bias": -15, "mode": "tracking"},
+            8: {"tilt_bias": 0,   "azimuth_bias": 15, "mode": "tracking"},
+            9: {"tilt_bias": 10,  "azimuth_bias": -10, "mode": "tracking"},
+            10: {"tilt_bias": -10, "azimuth_bias": 10, "mode": "tracking"},
+            11: {"tilt_bias": 0,   "azimuth_bias": 0, "mode": "stow"},
+            12: {"tilt_bias": 0,   "azimuth_bias": 0, "mode": "diffuse"}
+        }
+        action = mapping.get(action_id, mapping[3]).copy() # fallback to identity
+        action["action_id"] = action_id
+        return action

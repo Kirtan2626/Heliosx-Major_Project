@@ -80,3 +80,19 @@ def test_state_construction():
         assert state_tensor.shape == (14,)
         assert abs(state_tensor[3] - 0.0) < 1e-5
         assert abs(state_tensor[4] - (-1.0)) < 1e-5
+
+def test_action_decoding():
+    policy = HeliosXPolicy(model_path="dummy.pt")
+    
+    # Test action ID 0: Tilt Bias -15
+    action = policy._decode_action(0)
+    assert action["tilt_bias"] == -15
+    assert action["mode"] == "tracking"
+    
+    # Test action ID 11: Stow
+    action = policy._decode_action(11)
+    assert action["mode"] == "stow"
+    
+    # Test action ID 12: Diffuse
+    action = policy._decode_action(12)
+    assert action["mode"] == "diffuse"
