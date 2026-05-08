@@ -1,8 +1,10 @@
 from contextlib import asynccontextmanager
 from typing import Annotated
+from datetime import datetime
 import httpx
 from fastapi import FastAPI, Depends, Request, Query
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.concurrency import run_in_threadpool
 from src.models import CoordinatesRequest, UnifiedEnvironmentalPayload, LatQuery, LonQuery
 from src.weather_service import WeatherService
 from src.site_context import SiteContextService
@@ -66,5 +68,17 @@ async def simulate(
     weather = await weather_svc.get_weather(req)
     context = await context_svc.get_context(req)
     
-    result = run_simulation(lat, lon, weather.model_dump(), context)
+    # Deterministic start time (today at midnight)
+    start_dt = datetime.now().replace(hour=0, minute=0, second=0, microsecond=0)
+    # Simple lon-based UTC offset
+    utc_offset = round(lon / 15.0)
+    
+    result = await run_in_threadpool(
+        run_simulation, 
+        lat, lon, 
+        weather.model_dump(), 
+        context, 
+        start_dt=start_dt, 
+        utc_offset=utc_offset
+    )
     return result

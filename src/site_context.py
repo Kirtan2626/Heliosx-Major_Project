@@ -41,7 +41,7 @@ class SiteContextService:
           way["building"]({bbox});
           node["natural"="tree"]({bbox});
         );
-        out body qt;
+        out body geom qt;
         """
         
         try:

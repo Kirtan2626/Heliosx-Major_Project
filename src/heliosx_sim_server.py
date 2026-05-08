@@ -20,10 +20,16 @@ def project_coordinates(base_lat: float, base_lon: float, target_lat: float, tar
 def build_cartesian_context(base_lat: float, base_lon: float, context_data: dict) -> list:
     obstacles = []
     for b in context_data.get("buildings", []):
-        # Fallback to a square if it's just a node or malformed
-        # Real implementation would parse 'geometry' tags from overpass
-        # For this prototype, we simulate a 10x10m square slightly North
-        poly = [(-5, 5), (5, 5), (5, 15), (-5, 15)]
+        geom = b.get("geometry", [])
+        if geom:
+            poly = []
+            for pt in geom:
+                x, y = project_coordinates(base_lat, base_lon, pt["lat"], pt["lon"])
+                poly.append((x, y))
+        else:
+            # Fallback to a square slightly North if no geometry
+            poly = [(-5, 5), (5, 5), (5, 15), (-5, 15)]
+            
         obstacles.append({
             "type": "building", 
             "polygon": poly, 
@@ -31,18 +37,24 @@ def build_cartesian_context(base_lat: float, base_lon: float, context_data: dict
         })
     return obstacles
 
-def run_simulation(lat: float, lon: float, weather: dict, context: dict) -> dict:
-    start_dt = datetime.now().replace(hour=0, minute=0, second=0, microsecond=0)
+def run_simulation(lat: float, lon: float, weather: dict, context: dict, start_dt: datetime = None, utc_offset: float = 0.0) -> dict:
+    if start_dt is None:
+        # Default to today at midnight if not provided
+        start_dt = datetime.now().replace(hour=0, minute=0, second=0, microsecond=0)
+    
     obstacles = build_cartesian_context(lat, lon, context)
     
     results = []
     total_fixed, total_tracker, total_ai = 0.0, 0.0, 0.0
     
+    # Safe default regime (e.g., New Delhi regime 0)
+    regime = [1.0] + [0.0] * 10
+    
     for step in range(48): # 48 half-hour intervals
         dt = start_dt + timedelta(minutes=30 * step)
         
         # 1. Solar Math
-        alt, az = get_solar_position(lat, lon, 0.0, dt) # Assuming UTC for simplicity
+        alt, az = get_solar_position(lat, lon, utc_offset, dt)
         dni = get_clear_sky_dni(alt, 100.0) # assume 100m site alt
         
         # 2. Shadows
@@ -61,7 +73,7 @@ def run_simulation(lat: float, lon: float, weather: dict, context: dict) -> dict
             "longitude": lon, 
             "site_altitude": 100.0, 
             "dni": dni,
-            "regime_vector": [0.0] * 11
+            "regime_vector": regime
         }
         action = policy.get_action(state)
         
