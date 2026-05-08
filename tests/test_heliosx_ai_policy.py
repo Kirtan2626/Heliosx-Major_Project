@@ -47,3 +47,36 @@ def test_torch_load_failure_fallback(monkeypatch):
     
     policy = HeliosXPolicy(model_path="non_existent.pt")
     assert policy.use_fallback is True
+
+def test_state_construction():
+    policy = HeliosXPolicy(model_path="dummy.pt")
+    raw_state = {
+        "sun_altitude": 45.0,
+        "sun_azimuth": 180.0,
+        "hour_of_day": 12.0,
+        "day_of_year": 180,
+        "cloud_fraction": 0.2,
+        "aqi": 50,
+        "shadow_factor": 0.0,
+        "latitude": 35.0,
+        "longitude": -119.0,
+        "site_altitude": 100.0,
+        "dni": 800.0
+    }
+    state_tensor = policy._construct_state(raw_state)
+    
+    # Since we are running in an environment where torch might be available, 
+    # we check the shape accordingly.
+    if src.heliosx_ai_policy.TORCH_AVAILABLE:
+        import torch
+        assert isinstance(state_tensor, torch.Tensor)
+        assert state_tensor.shape == (1, 14)
+        # Check normalized hour sine/cosine
+        assert abs(state_tensor[0, 3] - 0.0) < 1e-5 # sin(pi)
+        assert abs(state_tensor[0, 4] - (-1.0)) < 1e-5 # cos(pi)
+    else:
+        import numpy as np
+        assert isinstance(state_tensor, np.ndarray)
+        assert state_tensor.shape == (14,)
+        assert abs(state_tensor[3] - 0.0) < 1e-5
+        assert abs(state_tensor[4] - (-1.0)) < 1e-5
