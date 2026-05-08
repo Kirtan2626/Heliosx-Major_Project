@@ -3,7 +3,7 @@ from typing import Annotated
 import httpx
 from fastapi import FastAPI, Depends, Request, Query
 from fastapi.middleware.cors import CORSMiddleware
-from src.models import CoordinatesRequest, UnifiedEnvironmentalPayload
+from src.models import CoordinatesRequest, UnifiedEnvironmentalPayload, LatQuery, LonQuery
 from src.weather_service import WeatherService
 from src.site_context import SiteContextService
 
@@ -17,10 +17,10 @@ async def lifespan(app: FastAPI):
 
 app = FastAPI(title="Helios-X API Gateway", lifespan=lifespan)
 
-# Restrict CORS Origins in production. Using * for development convenience.
+# Restrict CORS Origins in production.
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
+    allow_origins=["http://localhost:3000"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -35,10 +35,6 @@ def get_weather_service(client: httpx.AsyncClient = Depends(get_http_client)):
 
 def get_context_service(client: httpx.AsyncClient = Depends(get_http_client)):
     return SiteContextService(client=client)
-
-# Validated coordinates
-LatQuery = Annotated[float, Query(description="Latitude (-90 to 90)", ge=-90, le=90)]
-LonQuery = Annotated[float, Query(description="Longitude (-180 to 180)", ge=-180, le=180)]
 
 @app.get("/weather", response_model=UnifiedEnvironmentalPayload)
 async def get_weather(
