@@ -2,9 +2,32 @@ import math
 import datetime
 
 def get_day_of_year(dt: datetime.datetime) -> int:
+    """
+    Returns the day of the year (1-366) for a given datetime object.
+    
+    Args:
+        dt: The datetime object to process.
+        
+    Returns:
+        The day of the year as an integer.
+    """
     return dt.timetuple().tm_yday
 
-def get_solar_position(lat: float, lon: float, utc_offset: float, dt: datetime.datetime) -> tuple:
+def get_solar_position(lat: float, lon: float, utc_offset: float, dt: datetime.datetime) -> tuple[float, float]:
+    """
+    Calculates the solar altitude and azimuth angles for a given location and time.
+    
+    Args:
+        lat: Latitude in decimal degrees.
+        lon: Longitude in decimal degrees.
+        utc_offset: UTC offset in hours.
+        dt: Datetime object (should be naive or matched to utc_offset).
+        
+    Returns:
+        A tuple of (altitude_deg, azimuth_deg).
+        Altitude is the angle above the horizon (0 to 90).
+        Azimuth is the angle from North (0 to 360, clockwise).
+    """
     # 1. Fractional year
     n = get_day_of_year(dt)
     gamma = 2 * math.pi / 365 * (n - 1 + (dt.hour - 12) / 24)
@@ -27,23 +50,40 @@ def get_solar_position(lat: float, lon: float, utc_offset: float, dt: datetime.d
     lat_rad = math.radians(lat)
     
     # 6. Solar Zenith Angle (radians)
-    zenith_rad = math.acos(math.sin(lat_rad) * math.sin(decl_rad) + 
-                           math.cos(lat_rad) * math.cos(decl_rad) * math.cos(ha_rad))
+    cos_zenith = math.sin(lat_rad) * math.sin(decl_rad) + \
+                 math.cos(lat_rad) * math.cos(decl_rad) * math.cos(ha_rad)
+    cos_zenith = max(-1.0, min(1.0, cos_zenith))
+    zenith_rad = math.acos(cos_zenith)
     alt_deg = 90 - math.degrees(zenith_rad)
     
     # 7. Solar Azimuth Angle (radians)
-    cos_az = (math.sin(decl_rad) - math.sin(lat_rad) * math.cos(zenith_rad)) / \
-             (math.cos(lat_rad) * math.sin(zenith_rad))
-    cos_az = max(-1.0, min(1.0, cos_az)) # clip
-    az_rad = math.acos(cos_az)
-    
-    az_deg = math.degrees(az_rad)
-    if ha_rad > 0:
-        az_deg = 360 - az_deg
+    # Use a small epsilon to avoid ZeroDivisionError at zenith or poles
+    denom = math.cos(lat_rad) * math.sin(zenith_rad)
+    if abs(denom) < 1e-10:
+        # At the pole or zenith, azimuth is technically undefined or arbitrary.
+        # We'll return 180.0 (South) for consistency.
+        az_deg = 180.0
+    else:
+        cos_az = (math.sin(decl_rad) - math.sin(lat_rad) * math.cos(zenith_rad)) / denom
+        cos_az = max(-1.0, min(1.0, cos_az)) # clip
+        az_rad = math.acos(cos_az)
+        az_deg = math.degrees(az_rad)
+        if ha_rad > 0:
+            az_deg = 360 - az_deg
         
     return alt_deg, az_deg
 
 def get_clear_sky_dni(alt_deg: float, altitude_m: float) -> float:
+    """
+    Calculates the clear-sky Direct Normal Irradiance (DNI) using the Hottel model.
+    
+    Args:
+        alt_deg: Solar altitude angle in decimal degrees.
+        altitude_m: Site altitude above sea level in meters.
+        
+    Returns:
+        Direct Normal Irradiance in W/m^2.
+    """
     # Simplified Hottel model
     if alt_deg <= 0: return 0.0
     
