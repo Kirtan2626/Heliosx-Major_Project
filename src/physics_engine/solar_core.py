@@ -1,5 +1,6 @@
 import math
 import datetime
+import calendar
 
 def get_day_of_year(dt: datetime.datetime) -> int:
     """
@@ -30,7 +31,8 @@ def get_solar_position(lat: float, lon: float, utc_offset: float, dt: datetime.d
     """
     # 1. Fractional year
     n = get_day_of_year(dt)
-    gamma = 2 * math.pi / 365 * (n - 1 + (dt.hour - 12) / 24)
+    days_in_year = 366 if calendar.isleap(dt.year) else 365
+    gamma = 2 * math.pi / days_in_year * (n - 1 + (dt.hour - 12) / 24)
     
     # 2. Equation of time (minutes)
     eqtime = 229.18 * (0.000075 + 0.001868 * math.cos(gamma) - 0.032077 * math.sin(gamma) 
