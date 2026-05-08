@@ -8,13 +8,12 @@ logger = logging.getLogger(__name__)
 class WeatherService:
     def __init__(self):
         self._cache = {}
-        self._fail_next = False # For testing
 
     async def get_weather(self, coords: CoordinatesRequest) -> UnifiedEnvironmentalPayload:
         cache_key = f"{round(coords.lat, 2)},{round(coords.lon, 2)}"
         
-        if self._fail_next:
-            return self._safe_fallback()
+        if cache_key in self._cache:
+            return self._cache[cache_key]
 
         try:
             async with httpx.AsyncClient(timeout=5.0) as client:
@@ -32,11 +31,11 @@ class WeatherService:
                     cloudCoverPercent=float(curr.get("cloud_cover", 0.0)),
                     source="Open-Meteo",
                     sourceLabel="Open-Meteo (Live API)",
-                    fetchedAt=datetime.now().strftime("%m/%d/%Y, %I:%M:%S %p")
+                    fetchedAt=datetime.now()
                 )
                 self._cache[cache_key] = payload
                 return payload
-        except Exception as e:
+        except (httpx.RequestError, httpx.HTTPStatusError) as e:
             logger.error(f"Weather API failed: {e}")
             return self._safe_fallback()
 
@@ -49,5 +48,5 @@ class WeatherService:
             cloudCoverPercent=0.0,
             source="Fallback",
             sourceLabel="Fallback (Safe Physics Defaults)",
-            fetchedAt=datetime.now().strftime("%m/%d/%Y, %I:%M:%S %p")
+            fetchedAt=datetime.now()
         )

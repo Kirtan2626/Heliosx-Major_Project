@@ -1,5 +1,6 @@
 from pydantic import BaseModel
 from typing import Optional
+from datetime import datetime
 
 class CoordinatesRequest(BaseModel):
     lat: float
@@ -14,4 +15,4 @@ class UnifiedEnvironmentalPayload(BaseModel):
     cloudCoverPercent: float
     source: str
     sourceLabel: str
-    fetchedAt: str
+    fetchedAt: datetime
