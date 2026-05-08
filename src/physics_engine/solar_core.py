@@ -75,6 +75,24 @@ def get_solar_position(lat: float, lon: float, utc_offset: float, dt: datetime.d
         
     return alt_deg, az_deg
 
+def calculate_air_mass(sun_alt: float) -> float:
+    """
+    Calculates the relative air mass using the Kasten-Young formula.
+    Guards against values <= 0 and caps at 38 (near horizon).
+    
+    Args:
+        sun_alt: Solar altitude in degrees.
+        
+    Returns:
+        The relative air mass.
+    """
+    if sun_alt <= 0:
+        return 38.0
+    
+    # Kasten-Young formula for air mass
+    am = 1 / (math.sin(math.radians(sun_alt)) + 0.50572 * (sun_alt + 6.07995)**-1.6364)
+    return min(38.0, am)
+
 def get_clear_sky_dni(alt_deg: float, altitude_m: float) -> float:
     """
     Calculates the clear-sky Direct Normal Irradiance (DNI) using the Hottel model.
@@ -93,7 +111,7 @@ def get_clear_sky_dni(alt_deg: float, altitude_m: float) -> float:
     a1 = 0.5055 + 0.00595 * (6.5 - altitude_m/1000)**2
     k = 0.2711 + 0.01858 * (2.5 - altitude_m/1000)**2
     
-    air_mass = 1 / (math.sin(math.radians(alt_deg)) + 0.50572 * (alt_deg + 6.07995)**-1.6364)
+    air_mass = calculate_air_mass(alt_deg)
     tau = a0 + a1 * math.exp(-k * air_mass)
     
     return 1367.0 * tau # Solar constant
