@@ -1,0 +1,53 @@
+import httpx
+from datetime import datetime
+from src.models import CoordinatesRequest, UnifiedEnvironmentalPayload
+import logging
+
+logger = logging.getLogger(__name__)
+
+class WeatherService:
+    def __init__(self):
+        self._cache = {}
+        self._fail_next = False # For testing
+
+    async def get_weather(self, coords: CoordinatesRequest) -> UnifiedEnvironmentalPayload:
+        cache_key = f"{round(coords.lat, 2)},{round(coords.lon, 2)}"
+        
+        if self._fail_next:
+            return self._safe_fallback()
+
+        try:
+            async with httpx.AsyncClient(timeout=5.0) as client:
+                url = f"https://api.open-meteo.com/v1/forecast?latitude={coords.lat}&longitude={coords.lon}&current=temperature_2m,relative_humidity_2m,cloud_cover,wind_speed_10m"
+                resp = await client.get(url)
+                resp.raise_for_status()
+                data = resp.json()
+                
+                curr = data.get("current", {})
+                payload = UnifiedEnvironmentalPayload(
+                    temperatureC=float(curr.get("temperature_2m", 35.0)),
+                    roundedTemperatureC=int(round(curr.get("temperature_2m", 35.0))),
+                    humidityPercent=float(curr.get("relative_humidity_2m", 50.0)),
+                    windSpeed=float(curr.get("wind_speed_10m", 3.0)),
+                    cloudCoverPercent=float(curr.get("cloud_cover", 0.0)),
+                    source="Open-Meteo",
+                    sourceLabel="Open-Meteo (Live API)",
+                    fetchedAt=datetime.now().strftime("%m/%d/%Y, %I:%M:%S %p")
+                )
+                self._cache[cache_key] = payload
+                return payload
+        except Exception as e:
+            logger.error(f"Weather API failed: {e}")
+            return self._safe_fallback()
+
+    def _safe_fallback(self) -> UnifiedEnvironmentalPayload:
+        return UnifiedEnvironmentalPayload(
+            temperatureC=35.0,
+            roundedTemperatureC=35,
+            humidityPercent=50.0,
+            windSpeed=3.0,
+            cloudCoverPercent=0.0,
+            source="Fallback",
+            sourceLabel="Fallback (Safe Physics Defaults)",
+            fetchedAt=datetime.now().strftime("%m/%d/%Y, %I:%M:%S %p")
+        )
