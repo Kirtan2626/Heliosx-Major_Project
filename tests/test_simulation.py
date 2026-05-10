@@ -32,6 +32,14 @@ def test_run_simulation_basic():
         assert "shadow" in entry
         assert "action" in entry
         assert "energy_ai" in entry
+        assert "energy_tracker" in entry
+        assert "temp_c" in entry
+        assert "dni" in entry
+        assert "aqi" in entry
+        assert "wind_speed" in entry
+
+    assert "faults" in result
+    assert "commercial_impact" in result
 
 if __name__ == "__main__":
     # Manual run

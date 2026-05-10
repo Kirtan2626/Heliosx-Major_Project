@@ -1,43 +1,44 @@
-# Design: Commercial Impact Service Refactoring
+# MATLAB Export and Simulation Safety Upgrades Design
 
-Refactor `commercial_impact.py` for maintainability and robustness.
+This document describes the enhancements to the MATLAB export service, simulation data consistency, and API validation.
 
-## Requirements
+## Goals
+- Enhance `format_for_matlab` to include `faults` and `obstacles`.
+- Implement `SimulationResult` Pydantic model for robust API validation.
+- Remove hardcoded AQI from simulation server and move it to a constant/parameter.
+- Improve type safety across the MATLAB export pipeline.
 
-- Use `Enum` for `MaintenanceUrgency`.
-- Define constants for thresholds (10.0, 1.0) and divisor (1000.0).
-- Add type hints and docstrings.
-- Add input validation (positive values for `wh_loss` and `tariff`).
-- Update tests for boundaries and edge cases.
+## Proposed Changes
 
-## Proposed Design
+### 1. Data Models (`src/models.py`)
+Introduce several new models to represent the full simulation output:
+- `TimeSeriesEntry`: Individual step data (energy, sun position, etc.).
+- `DailyTotals`: Aggregated energy metrics.
+- `CommercialImpact`: Financial loss and urgency metrics.
+- `FaultEntry`: Diagnostic fault info.
+- `ObstacleEntry`: Cartesian geometry of buildings and trees.
+- `SimulationResult`: The comprehensive payload returned by `/simulate` and consumed by `/export-matlab`.
 
-### 1. Enum Definition
-```python
-from enum import Enum
+### 2. Simulation Server (`src/heliosx_sim_server.py`)
+- Define `DEFAULT_AQI = 50.0`.
+- Update `build_cartesian_context` to process `trees` from context data.
+- Update `run_simulation` to:
+    - Include `obstacles` in the returned dictionary.
+    - Use `DEFAULT_AQI` (and allow it to be overridden via `kwargs`).
 
-class MaintenanceUrgency(Enum):
-    CRITICAL = "Schedule within 48 hours"
-    MONITOR = "Monitor performance"
-    HEALTHY = "System Healthy"
-```
+### 3. MATLAB Export Service (`src/services/matlab_export_service.py`)
+- Update `format_for_matlab` to accept `SimulationResult` (as a Pydantic model).
+- Add `Diagnostics` section containing `faults`.
+- Add `SiteGeometry` section containing `obstacles`.
+- Add Python type hints to all functions.
 
-### 2. Constants
-```python
-HIGH_IMPACT_THRESHOLD = 10.0
-LOW_IMPACT_THRESHOLD = 1.0
-WH_TO_KWH_DIVISOR = 1000.0
-```
-
-### 3. Logic Improvements
-- Input validation: `raise ValueError` if `wh_loss < 0` or `tariff < 0`.
-- Use inclusive thresholds `>=` if confirmed (feedback suggested inclusive might be appropriate).
-
-### 4. Test Expansion
-- Test `wh_loss=0`.
-- Test `financial_loss=10.0` (boundary).
-- Test `financial_loss=1.0` (boundary).
-- Test negative values.
+### 4. API Gateway (`src/serve_dashboard.py`)
+- Update the `/export-matlab` endpoint to use `SimulationResult` as the request body type.
+- This ensures that the input dictionary is validated before being processed by the export service.
 
 ## Verification Plan
-- Run `pytest tests/test_commercial_impact.py`.
+- **Automated Tests**:
+    - Update `test_export_matlab_endpoint` in `tests/test_api.py` to verify the new fields (`faults`, `obstacles`).
+    - Verify all existing tests pass (`pytest`).
+- **Manual Verification**:
+    - Check the structure of the JSON returned by `/export-matlab` to ensure it matches the Simscape Electrical requirements.
