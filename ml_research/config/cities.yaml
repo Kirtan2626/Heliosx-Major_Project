@@ -1,0 +1,76 @@
+# config/cities.yaml — 6 target cities for Helios-X v2
+# Selected for maximum diversity with strong data coverage
+
+cities:
+  delhi:
+    name: "New Delhi"
+    lat: 28.61
+    lon: 77.21
+    alt_m: 216
+    utc_offset: 5.5
+    climate: "hot_semi_arid"
+    aqi_range: [50, 400]
+    key_challenge: "Extreme AQI swing, dense obstacles"
+    # Panel installation site (rooftop in central Delhi)
+    panel_lat: 28.6139
+    panel_lon: 77.2090
+
+  new_york:
+    name: "New York"
+    lat: 40.71
+    lon: -74.01
+    alt_m: 10
+    utc_offset: -5
+    climate: "humid_continental"
+    aqi_range: [20, 80]
+    key_challenge: "NSRDB ground truth, 4 seasons"
+    panel_lat: 40.7128
+    panel_lon: -74.0060
+
+  london:
+    name: "London"
+    lat: 51.51
+    lon: -0.13
+    alt_m: 11
+    utc_offset: 0
+    climate: "temperate_oceanic"
+    aqi_range: [15, 40]
+    key_challenge: "High latitude, heavy cloud"
+    panel_lat: 51.5074
+    panel_lon: -0.1278
+
+  tokyo:
+    name: "Tokyo"
+    lat: 35.68
+    lon: 139.65
+    alt_m: 40
+    utc_offset: 9
+    climate: "humid_subtropical"
+    aqi_range: [20, 60]
+    key_challenge: "Dense high-rise, typhoon season"
+    panel_lat: 35.6762
+    panel_lon: 139.6503
+
+  dubai:
+    name: "Dubai"
+    lat: 25.20
+    lon: 55.27
+    alt_m: 5
+    utc_offset: 4
+    climate: "hot_desert"
+    aqi_range: [30, 120]
+    key_challenge: "Near-zero cloud, sand/dust AQI"
+    panel_lat: 25.2048
+    panel_lon: 55.2708
+
+  sydney:
+    name: "Sydney"
+    lat: -33.87
+    lon: 151.21
+    alt_m: 39
+    utc_offset: 10
+    climate: "humid_subtropical"
+    aqi_range: [10, 40]
+    key_challenge: "Southern hemisphere season flip"
+    panel_lat: -33.8688
+    panel_lon: 151.2093

@@ -1,0 +1,11 @@
+# Ablation A4: Single-city (Delhi only)
+# Tests generalization capability
+# Inherits all other settings from default.yaml
+
+experiment:
+  name: "ablation_single_city"
+
+budget:
+  episodes_per_city: 6000
+  total_episodes: 6000
+  train_cities: ["delhi"]

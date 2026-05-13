@@ -41,9 +41,11 @@ export default function Home() {
   };
 
   const handleSimulate = async () => {
+    console.log("Starting simulation for:", coords);
     setLoading(true);
     try {
       const data = await runSimulation(coords.lat, coords.lon);
+      console.log("Simulation result received:", data);
       setResult(data);
       setCurrentStep(24); // Default to noon (sun high in sky)
       setIsPlaying(false);
@@ -137,7 +139,12 @@ export default function Home() {
             </button>
           </form>
 
-          <button onClick={handleSimulate} disabled={loading} className="w-full bg-orange-600 hover:bg-orange-500 disabled:bg-slate-700 font-bold py-2.5 rounded-lg mt-auto transition-all shadow-lg shadow-orange-900/20">
+          <button 
+            type="button"
+            onClick={handleSimulate} 
+            disabled={loading} 
+            className="w-full bg-orange-600 hover:bg-orange-500 disabled:bg-slate-700 font-bold py-2.5 rounded-lg mt-auto transition-all shadow-lg shadow-orange-900/20"
+          >
             {loading ? "Running Simulation..." : "Run Simulation"}
           </button>
         </section>

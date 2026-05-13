@@ -1,0 +1,15 @@
+# Ablation A2: No reward shaping
+# Tests the value of reward shaping bonuses
+# Inherits all other settings from default.yaml
+
+experiment:
+  name: "ablation_no_shaping"
+
+reward:
+  shadow_escape_bonus: 0.0
+  partial_improvement_bonus: 0.0
+  unnecessary_bias_penalty: 0.0
+  stow_correct_bonus: 0.0
+  stow_incorrect_penalty: 0.0
+  diffuse_correct_bonus: 0.0
+  diffuse_incorrect_penalty: 0.0

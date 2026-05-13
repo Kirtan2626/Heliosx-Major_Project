@@ -43,8 +43,8 @@ function Building({ obs }: { obs: any }) {
     if (!obs.polygon || obs.polygon.length === 0) return s;
     obs.polygon.forEach((pt: number[], idx: number) => {
         // x is East (+X), y is North (-Z in Three.js)
-        if (idx === 0) s.moveTo(pt[0], -pt[1]);
-        else s.lineTo(pt[0], -pt[1]);
+        if (idx === 0) s.moveTo(pt[0], pt[1]);
+        else s.lineTo(pt[0], pt[1]);
     });
     return s;
   }, [obs.polygon]);
@@ -121,9 +121,13 @@ function SolarPanel({ action, sunAlt, sunAz }: { action: string, sunAlt: number,
 }
 
 export default function DigitalTwin3D({ obstacles, sunAlt, sunAz, panelAction }: DigitalTwin3DProps) {
+  // Safety guards for NaN or undefined values
+  const safeAlt = isNaN(sunAlt) ? 0 : sunAlt;
+  const safeAz = isNaN(sunAz) ? 180 : sunAz;
+
   const distance = 100;
-  const phi = (90 - sunAlt) * (Math.PI / 180);
-  const azRad = sunAz * (Math.PI / 180);
+  const phi = (90 - safeAlt) * (Math.PI / 180);
+  const azRad = safeAz * (Math.PI / 180);
   
   const r_h = distance * Math.sin(phi);
   const sunX = r_h * Math.sin(azRad);
@@ -141,7 +145,7 @@ export default function DigitalTwin3D({ obstacles, sunAlt, sunAz, panelAction }:
       <ambientLight intensity={0.8} />
       <hemisphereLight skyColor="#ffffff" groundColor="#334155" intensity={0.6} />
       
-      {sunAlt > 0 && <SunLight alt={sunAlt} az={sunAz} />}
+      {safeAlt > 0 && <SunLight alt={safeAlt} az={safeAz} />}
       
       {/* Ground */}
       <mesh rotation={[-Math.PI / 2, 0, 0]} receiveShadow>
@@ -151,7 +155,7 @@ export default function DigitalTwin3D({ obstacles, sunAlt, sunAz, panelAction }:
       
       <gridHelper args={[200, 40, '#64748b', '#1e293b']} position={[0, 0.01, 0]} />
       
-      <SolarPanel action={panelAction} sunAlt={sunAlt} sunAz={sunAz} />
+      <SolarPanel action={panelAction} sunAlt={safeAlt} sunAz={safeAz} />
       <Obstacles data={obstacles || []} />
       
       <OrbitControls makeDefault maxPolarAngle={Math.PI / 2 - 0.05} target={[0, 2, 0]} />

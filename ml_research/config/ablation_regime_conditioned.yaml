@@ -1,0 +1,71 @@
+# Ablation: regime-conditioned single DQN (RECOMMENDED architecture)
+# Implementation plan, Sections 11.6 and 11.8 (row 4 of the five-way table).
+
+experiment:
+  name: "helios_x_v2_regime_conditioned"
+  seed: 42
+  device: "cpu"
+
+architecture:
+  type: regime_conditioned_dqn
+  module: agent.regime_conditioned_network
+  class: RegimeConditionedQNetwork
+  base_state_dim: 14
+  n_regimes: 11           # one per training city in cities_extended.yaml
+  hidden_layers: [128, 128, 64]
+  activation: relu
+
+state:
+  base_dim: 14
+  regime_dim: 11
+  total_dim: 25           # 14 base + 11 soft regime weights
+
+actions:
+  dim: 13            # unchanged from default.yaml
+
+network:
+  hidden_layers: [128, 128, 64]
+  activation: relu
+
+training:
+  algorithm: "Double DQN"
+  optimizer: Adam
+  learning_rate: 0.0003
+  gamma: 0.95
+  tau: 0.005
+  batch_size: 64
+  replay_buffer_size: 50000
+  min_replay_size: 1000
+  max_grad_norm: 1.0
+  loss: smooth_l1
+
+exploration:
+  epsilon_start: 1.0
+  epsilon_end: 0.01
+  epsilon_decay_steps: 30000
+
+budget:
+  episodes_per_city: 1000
+  total_episodes: 11000          # 11 cities x 1000
+  checkpoint_every: 100
+  eval_every: 200
+
+warmstart:
+  enabled: true
+  pretrain_epochs: 80
+  pretrain_lr: 0.001
+  include_regime_input: true     # warm-start now uses (state || regime) too
+
+cities_config: config/cities_extended.yaml
+
+regime_classifier:
+  centroids_path: deployment/regime_centroids.npz
+  n_bootstrap: 500
+
+evaluation:
+  protocols: [in_distribution, loco, unseen_coordinate]
+  baselines: [fixed_tilt, deterministic, pure_physics, dqn_baseline]
+  statistical_test: wilcoxon_signed_rank
+  significance_level: 0.05
+
+seeds: [42, 123, 7, 2024, 9]

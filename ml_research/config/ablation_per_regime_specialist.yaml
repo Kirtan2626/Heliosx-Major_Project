@@ -1,0 +1,72 @@
+# Ablation: hard expert-per-regime
+# Implementation plan, Section 11.8 (row 3 of the five-way table).
+#
+# This is intentionally the WEAK baseline. We expect it to underperform
+# the regime-conditioned single model on borderline sites and on
+# zero-shot transfer due to (a) less data per specialist and (b) hard
+# switching at regime boundaries. The result either way is publishable.
+
+experiment:
+  name: "helios_x_v2_per_regime_specialist"
+  seed: 42
+  device: "cpu"
+
+architecture:
+  type: per_regime_specialist
+  base_module: agent.dqn_network
+  base_class: QNetwork
+  base_state_dim: 14
+  n_regimes: 11                   # one specialist DQN per training regime
+
+state:
+  base_dim: 14
+  regime_dim: 0
+  total_dim: 14
+
+actions:
+  dim: 13
+
+network:
+  hidden_layers: [128, 128, 64]
+  activation: relu
+
+training:
+  algorithm: "Double DQN"
+  optimizer: Adam
+  learning_rate: 0.0003
+  gamma: 0.95
+  tau: 0.005
+  batch_size: 64
+  replay_buffer_size: 50000
+  min_replay_size: 1000
+  max_grad_norm: 1.0
+  loss: smooth_l1
+  per_regime_isolation: true       # each specialist sees ONLY its regime's data
+
+exploration:
+  epsilon_start: 1.0
+  epsilon_end: 0.01
+  epsilon_decay_steps: 30000
+
+budget:
+  episodes_per_specialist: 1000    # 1000 episodes per regime
+  total_episodes: 10000            # 10 specialists x 1000
+
+warmstart:
+  enabled: true
+  pretrain_epochs: 80
+  pretrain_lr: 0.001
+  per_regime_warmstart: true       # warm-start uses only that regime's clear-sky oracle
+
+cities_config: config/cities_extended.yaml
+
+selection:
+  policy: hard_argmax_at_install   # use the regime classifier's top-1 to pick the specialist
+
+evaluation:
+  protocols: [in_distribution, loco, unseen_coordinate]
+  baselines: [fixed_tilt, deterministic, pure_physics, dqn_baseline]
+  statistical_test: wilcoxon_signed_rank
+  significance_level: 0.05
+
+seeds: [42, 123, 7, 2024, 9]

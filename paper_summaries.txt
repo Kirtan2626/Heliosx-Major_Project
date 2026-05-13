@@ -1,0 +1,549 @@
+REFERENCE [1]: A Digital Twin Framework for DecisionSupport and O.pdf
+CONTENT_START:
+A Digital Twin Framework for Decision-Support and
+Optimization of EV Charging Infrastructure in
+Localized Urban Systems
+Bui Khanh Linh Doa, Thanh H. Nguyenb, Nghi Huynh Quanga, Doanh
+Nguyen-Ngoca,c,∗, Laurent El Ghaouia,c
+aCenter for Environmental Intelligence, VinUniversity, Hanoi, Vietnam
+bDepartment of Civil and Environmental Engineering, University of Illinois
+Urbana-Champaign, Urbana, IL, United States
+cCollege of Engineering and Computer Science, VinUniversity, Hanoi, Vietnam
+Abstract
+As Electric Vehicle (EV) adoption accelerates in urban environments, opti-
+mizing charging infrastructure is vital for balancing user satisfaction, energy
+efficiency, and financial viability. This study advances beyond static models
+by proposing a digital twin framework that integrates agent-based decision
+support with embedded optimization to dynamically simulate EV charging
+behaviors, infrastructure layouts, and policy responses across scenarios. Ap-
+plied to a localized urban site (a university campus) in Hanoi, Vietnam, the
+model evaluates operational policies, EV station configurations, and renew-
+able energy sources. The interactive dashboard enables seasonal analysis,
+revealing a 20% drop in solar efficiency from October to March, with wind
+power contributing under 5% of demand, highlighting the need for adap-
+tive energy management. Simulations show that dynamic notifications of
+newly available charging slots improve user satisfaction, while gasoline bans
+and idle fees enhance slot turnover with minimal added complexity. Embed-
+ded metaheuristic optimization identifies near-optimal mixes of fast (30kW)
+and standard (11kW) solar-powered chargers, balancing energy performance,
+profitability, and demand with high computational efficiency. This digital
+twin provides a flexible, computation-driven platform for EV infrastructure
+planning, with a transferable, modular design that enables seamless scaling
+∗Corresponding author. E-mail address: doanh.nn@vinuni.edu.vn (Nguyen-Ngoc,
+CONTENT_END
+
+REFERENCE [2]: Accelerating HighEfficiency Organic Photovoltaic Discovery via Pretrained Graph Neural Networks and .pdf
+CONTENT_START:
+Accepted as a Workshop paper at AI4MAT Workshop ICLR-2025
+ACCELERATING HIGH -EFFICIENCY ORGANIC PHOTO -
+VOLTAIC DISCOVERY VIA PRETRAINED GRAPH NEU-
+RAL NETWORKS AND GENERATIVE REINFORCEMENT
+LEARNING
+Jiangjie Qiu1 Hou Hei Lam 2 Xiuyuan Hu3 Wentao Li1 Siwei Fu1
+Fankun Zeng4 Hao Zhang3 Xiaonan Wang1∗
+1Department of Chemical Engineering, Tsinghua University
+2Department of Automation, Tsinghua University
+3Department of Electronic Engineering, Tsinghua University
+4Weiyang College, Tsinghua University
+ABSTRACT
+Organic photovoltaic (OPV) materials offer a promising avenue toward cost-
+effective solar energy utilization. However, optimizing donor-acceptor (D-A)
+combinations to achieve high power conversion efficiency (PCE) remains a sig-
+nificant challenge. In this work, we propose a framework that integrates large-
+scale pretraining of graph neural networks (GNNs) with a GPT-2 (Generative
+Pretrained Transformer 2)-based reinforcement learning (RL) strategy to design
+OPV molecules with potentially high PCE. This approach produces candidate
+molecules with predicted efficiencies approaching 21%, although further exper-
+imental validation is required. Moreover, we conducted a preliminary fragment-
+level analysis to identify structural motifs recognized by the RL model that may
+contribute to enhanced PCE, thus providing design guidelines for the broader re-
+search community. To facilitate continued discovery, we are building the largest
+open-source OPV dataset to date, expected to include nearly 3,000 donor-acceptor
+pairs. Finally, we discuss plans to collaborate with experimental teams on synthe-
+sizing and characterizing AI-designed molecules, which will provide new data to
+refine and improve our predictive and generative models.
+1 I NTRODUCTION
+Organic photovoltaics (OPVs) have attracted broad attention in the research community because
+of their potential to enable lightweight, flexible, and cost-effective solar cells. One of the primary
+challenges in advancing OPV technology
+CONTENT_END
+
+REFERENCE [3]: AI and Opendata Driven Scalable Solar Power Profiling.pdf
+CONTENT_START:
+1
+AI and Open-data Driven
+Scalable Solar Power Profiling
+Shiliang Zhang, Sabita Maharjan, Damla Turgut
+Abstract—Solar photovoltaic (PV) deployment is expanding
+rapidly, yet detailed, up-to-date information on the spatial distri-
+bution and capacity of rooftop PV remains limited. This paper
+presents an open, scalable framework for detecting solar panels
+from open data and generating city-level solar power profiles. We
+leverage foundation vision AI models to detect solar panel ge-
+ometries from open-source satellite imagery. This avoids manual
+data labeling and case-specific model training while maintaining
+robustness across heterogeneous imagery. Detected solar panels
+are converted into georeferenced polygons, yielding spatially
+explicit and incrementally extensible inventories. By integrating
+open weather data, we translate panel footprints into regional
+solar power profiles. The framework reduces dependency on
+proprietary imagery, manual labeling, and closed-source models,
+and offers a transparent and scalable approach for solar planning
+and analysis. We released the data and an API resulted from this
+work. For any user-specified building location, our API retrieves
+aerial imagery, detects rooftop solar panels, and returns georef-
+erenced polygons. This empowers researchers and developers to
+scan user-defined areas to build solar panel maps and associated
+solar production profiles, thus facilitating advanced analysis
+like distributed solar production integration, local power flow
+optimization, energy tariff design, and infrastructure planning.
+Index Terms—AI, open data, solar panel detection, solar power
+profiling.
+I. INTRODUCTION
+The growing deployment of solar photovoltaic (PV) sys-
+tems is reshaping electricity systems worldwide. Accurate and
+timely information on the location and production capacity of
+distributed solar installations is critical for distribution grid
+operation, capacity planning, and urban energy modeling [1],
+[2]. However, comprehensive solar 
+CONTENT_END
+
+REFERENCE [4]: Attentive Convolutional Deep RL for Optimizing Solar-Storage Systems.pdf
+CONTENT_START:
+IEEE TRANSACTIONS ON INDUSTRIAL INFORMATICS, VOL. XX, NO. XX, XXXX 1
+Attentive Convolutional Deep Reinforcement
+Learning for Optimizing Solar-Storage Systems
+in Real-Time Electricity Markets
+Jinhao Li, Changlong Wang, Hao Wang
+Abstract— This paper studies the synergy of solar-
+battery energy storage system (BESS) and develops a
+viable strategy for the BESS to unlock its economic
+potential by serving as a backup to reduce solar
+curtailments while also participating in the electricity
+market. We model the real-time bidding of the solar-battery
+system as two Markov decision processes for the solar
+farm and the BESS, respectively. We develop a novel
+deep reinforcement learning (DRL) algorithm to solve the
+problem by leveraging attention mechanism (AC) and multi-
+grained feature convolution to process DRL input for better
+bidding decisions. Simulation results demonstrate that our
+AC-DRL outperforms two optimization-based and one DRL-
+based benchmarks by generating 23%, 20%, and 11% higher
+revenue, as well as improving curtailment responses. The
+excess solar generation can effectively charge the BESS to
+bid in the market, significantly reducing solar curtailments
+by 76% and creating synergy for the solar-battery system to
+be more viable.
+Index Terms — Solar photovoltaic, solar curtailment,
+battery energy storage system, deep reinforcement
+learning, electricity market.
+I. I NTRODUCTION
+A. Background and Literature Review
+Solar photovoltaic (PV) has attracted nearly half of the
+global renewable investment and become the leading source
+of utility-scale renewables [1]. However, due to the inherent
+variability of solar PV generation, curtailment of solar PV
+outputs is often inevitable but causes significant economic
+losses for solar farms [2]. Therefore, effective efforts for solar
+curtailment mitigation are urgent for power system operators
+as a key factor for the successful grid transition, as well as for
+solar farm owners for profitability concerns.
+The grid-scale battery e
+CONTENT_END
+
+REFERENCE [5]: Benchmarking CNN and TransformerBased Object Detectors for UAV Solar Panel Inspection.pdf
+CONTENT_START:
+Benchmarking CNN and Transformer-Based Object
+Detectors for UA V Solar Panel Inspection
+Ashen Rodrigo 1, Isuru Munasinghe 1, Pubudu Sanjeewani 2, Asanka Perera 3
+1Faculty of Engineering, University of Moratuwa, Katubedda, Sri Lanka
+2STEM College, School of Computing Technologies, RMIT University, Melbourne, Australia
+3School of Engineering, University of Southern Queensland, Brisbane, Australia
+Abstract—Timely and accurate detection of defects and con-
+taminants in solar panels is critical for maintaining the efficiency
+and reliability of photovoltaic (PV) systems. While recent studies
+have applied deep learning to PV inspection, fair benchmarking
+across detector architectures and unbiased handling of class
+imbalance remain limited. This work presents a comprehensive
+benchmark of convolutional and transformer-based object detec-
+tors on UA V-captured RGB imagery of solar panels. It introduces
+a class-targeted augmentation strategy applied exclusively to the
+training split to mitigate imbalance without compromising eval-
+uation integrity. Faster R-CNN with ResNet50 and MobileNetV3
+backbones, RetinaNet with ResNet50, YOLOv5, YOLOv8, and
+Swin Transformer backbones integrated with Faster R-CNN
+(Tiny, Small, and Base variants) are evaluated. Performance is
+assessed using mean Average Precision (mAP) across multiple IoU
+thresholds, precision, recall, F1 score, and inference throughput
+to enable accuracy-throughput tradeoff analysis relevant to UA V
+deployment. Experimental results show that Faster R-CNN with
+a ResNet50 backbone achieves the highest localization accuracy,
+with mAP@0.5 of 0.893 and mAP@0.5:0.95 of 0.759, whereas the
+MobileNetV3 variant provides the best overall reliability balance,
+achieving recall of 0.745, F1-score of 0.809, and accuracy of 0.679
+on the test set.
+The dataset and code will be released upon acceptance of the
+paper.
+Index Terms—solar panel inspection, defect detection, deep
+learning, object detection models, UA V-based monitoring
+I. INTRODUC
+CONTENT_END
+
+REFERENCE [6]: ConstraintDriven WarmFreeze for Efficient Transfer Learning in Photovoltaic Systems.pdf
+CONTENT_START:
+Constraint-Driven Warm-Freeze for Efficient
+Transfer Learning in Photovoltaic Systems
+Yasmeen Saeed, Ahmed Sharshar, Mohsen Guizani
+Mohamed bin Zayed University of Artificial Intelligence, Abu Dhabi, United Arab Emirates
+{Yasmeen.Saeed, Ahmed.Sharshar, Mohsen.Guizani}@mbzuai.ac.ae
+Abstract—Detecting cyberattacks in photovoltaic (PV) moni-
+toring and MPPT control signals requires models robust to bias,
+drift, and transient spikes, yet lightweight enough for resource-
+constrained edge controllers. While deep learning outperforms
+traditional physics-based diagnostics and handcrafted features,
+standard fine-tuning is computationally prohibitive for edge
+devices. Furthermore, existing Parameter-Efficient Fine-Tuning
+(PEFT) methods typically apply uniform adaptation or rely on
+expensive architectural searches, lacking the flexibility to adhere
+to strict hardware budgets. To bridge this gap, we propose
+Constraint-Driven Warm-Freeze (CDWF), a budget-aware adap-
+tation framework. CDWF leverages a brief warm-start phase to
+quantify gradient-based block importance, subsequently solving
+a constrained optimization problem to dynamically allocate
+full trainability to high-impact blocks while efficiently adapting
+the remainder via Low-Rank Adaptation (LoRA). We evaluate
+CDWF on standard vision benchmarks (CIFAR-10/100) and a
+novel PV cyberattack dataset, transferring from bias pretraining
+to drift and spike detection. The experiments demonstrate that
+CDWF retains 90–99% of full fine-tuning performance while
+reducing trainable parameters by up to120×. These results
+establish CDWF as an effective, importance-guided solution for
+reliable transfer learning under tight edge constraints.
+Index Terms—Photovoltaic Systems, Cyberattack Detection,
+Transfer learning, Parameter-efficient fine-tuning, Constraint
+optimization, Low-rank adaptation, Efficient deep learning
+The code for this work is publicly available at https://github.
+com/yasmeenfozi/Constraint-Driven-Warm-Freeze.
+I. INTRODUCTIO
+CONTENT_END
+
+REFERENCE [7]: Enhancing solar PV energy production prediction using diverse ML models tuned with chimp optimization.pdf
+CONTENT_START:
+1
+Vol.:(0123456789)Scientific Reports |        (2024) 14:18583  | https://doi.org/10.1038/s41598-024-69544-8
+www.nature.com/scientificreports
+Enhancing solar photovoltaic 
+energy production prediction using 
+diverse machine learning models 
+tuned with the chimp optimization 
+algorithm
+Sameer Al‑Dahidi 1*, Mohammad Alrbai 2, Hussein Alahmer 3*, Bilal Rinchi 1 & Ali Alahmer 4
+Solar photovoltaic (PV) systems, integral for sustainable energy, face challenges in forecasting due 
+to the unpredictable nature of environmental factors influencing energy output. This study explores 
+five distinct machine learning (ML) models which are built and compared to predict energy production 
+based on four independent weather variables: wind speed, relative humidity, ambient temperature, 
+and solar irradiation. The evaluated models include multiple linear regression (MLR), decision tree 
+regression (DTR), random forest regression (RFR), support vector regression (SVR), and multi‑layer 
+perceptron (MLP). These models were hyperparameter tuned using chimp optimization algorithm 
+(ChOA) for a performance appraisal. The models are subsequently validated on the data from a 264 
+kWp PV system, installed at the Applied Science University (ASU) in Amman, Jordan. Of all 5 models, 
+MLP shows best root mean square error (RMSE), with the corresponding value of 0.503, followed by 
+mean absolute error (MAE) of 0.397 and a coefficient of determination (R 2) value of 0.99 in predicting 
+energy from the observed environmental parameters. Finally, the process highlights the fact that fine‑
+tuning of ML models for improved prediction accuracy in energy production domain still involves the 
+use of advanced optimization techniques like ChOA, compared with other widely used optimization 
+algorithms from the literature.
+Keywords Solar photovoltaic, Energy production, Prediction, Machine learning, Hyperparameter tuning, 
+Chimp optimization algorithm
+Abbreviations
+ALA-QPSO  Adaptive local attractor-based quant
+CONTENT_END
+
+REFERENCE [8]: Global spatiotemporal optimization of photovoltaic and wind power 2025.pdf
+CONTENT_START:
+Article https://doi.org/10.1038/s41467-025-57292-w
+Global spatiotemporal optimization of
+photovoltaic and wind power to achieve the
+Paris Agreement targets
+Yijing Wang1, Rong Wang 1,2,3,4,5,6,7 ,K a t s u m a s aT a n a k a8,9,
+Philippe Ciais 8,10, Josep Penuelas 11,12, Yves Balkanski 8, Jordi Sardans 11,12,
+Didier Hauglustaine 8,J u n j iC a o13, Jianmin Chen 1,2,3,L i nW a n g 1,2,3,
+Xu Tang2,3 & Renhe Zhang 2,3,4
+Limiting global warming below 1.5 or 2 °C calls for achieving energy systems
+with net-zero carbon dioxide (CO2) emissions likely by 2040 or 2070, but the
+pledged actions under current policiescannot meet these targets. Few studies
+have optimized global deployment of photovoltaic and wind power. Here we
+present a strategy involving constructi o no f2 2 , 8 2 1p h o t o v o l t a i c ,o n s h o r e -
+wind, and offshore-wind plants in 192 countries worldwide to minimize the
+levelized cost of electricity. We identify a large potential of cost reduction by
+combining coordination of energy storage and power transmission, dynamics
+of learning, trade of minerals, and development of supply chains. Our opti-
+mization increases the capacity of photovoltaic and wind power, accompanied
+by a reduction in the average cost of abatement from US Dollars ($) 140
+(baseline) to $33 per tonne CO
+2. Our study provides a global roadmap for
+achieving energy systems with net-zero CO2 emissions, emphasizing the
+physical, ﬁnancial, and socioeconomic challenges forward.
+Obtaining a high chance to mitigate global warming from 2 to 1.5 °C
+without overshoot likely requires advancing the time of net-zero CO2
+emissions from 2070 to 20401,2, which reduces adverse effects of cli-
+mate change on economic growth3 with a diminishing risk of irrever-
+sible tipping points 4. This is consistent with the projection that a
+majority of the 1.5 °C scenarios assessed by the Intergovernmental
+Panel on Climate Change (IPCC) result in net-zero CO
+2 emissions
+energy supply systems in the 2040 s, while a 
+CONTENT_END
+
+REFERENCE [9]: HybridSolarNet A Lightweight and Explainable EfficientNetCBAM Architecture for RealTime Solar Panel .pdf
+CONTENT_START:
+HybridSolarNet: A Lightweight and Explainable
+EfficientNet–CBAM Architecture for Real-Time
+Solar Panel Fault Detection
+1st Md. Asif Hossain
+Dept. of CSE
+East West University
+Dhaka, Bangladesh
+asifhossain8612@gmail.com
+2nd G M Mota-Tahrin Tayef
+Dept. of CSE
+East West University
+Dhaka, Bangladesh
+gmtahrin.tayef@gmail.com
+3rd Nabil Subhan
+Dept. of CSE
+East West University
+Dhaka, Bangladesh
+nabilsubhan861@gmail.com
+Abstract—Manual inspections for solar panel systems are a
+tedious, costly, and error-prone task, making it desirable for
+Unmanned Aerial Vehicle (UA V) based monitoring. Though deep
+learning models have excellent fault detection capabilities, almost
+all methods either are too large and heavy for edge computing
+devices or involve biased estimation of accuracy due to inef-
+fective learning techniques. We propose a new solar panel fault
+detection model called HybridSolarNet. It integrates EfficientNet-
+B0 with Convolutional Block Attention Module (CBAM). We
+implemented it on the Kaggle Solar Panel Images competition
+dataset with a tight split-before-augmentation protocol. It avoids
+leakage in accuracy estimation. We introduced focal loss and
+cosine annealing. Ablation analysis validates that accuracy boosts
+due to added benefits from CBAM (+1.53%) and that there are
+benefits from recognition of classes with imbalanced samples via
+focal loss. Overall average accuracy on 5-fold stratified cross-
+validation experiments on the given competition dataset topped
+92.37%±0.41 and an F1-score of 0.9226±0.39 compared to
+baselines like VGG19, requiring merely 16.3 MB storage, i.e.,
+32 times less. Its inference speed measured at 54.9 FPS with
+GPU support makes it a successful candidate for real-time UA V
+implementation. Moreover, visualization obtained from Grad-
+CAM illustrates that HybridSolarNet focuses on actual locations
+instead of irrelevant ones.
+Index Terms—Solar fault detection, EfficientNet, CBAM, Ex-
+plainable AI, UA V inspection.
+I. INTRODUCTION
+The huge adoption
+CONTENT_END
+
+REFERENCE [10]: Learning-Local-Trading-Strategy-DRL-Solar-2024-v2.pdf
+CONTENT_START:
+Learning a Local Trading Strategy: Deep Reinforcement Learning for
+Grid-scale Renewable Energy Integration
+Caleb Ju∗
+Industrial and Systems Engineering
+Georgia Institute of Technology
+calebju4@gatech.edu
+Constance Crozier
+Industrial and Systems Engineering
+Georgia Institute of Technology
+ccrozier8@gatech.edu
+Abstract
+Variable renewable generation increases the
+challenge of balancing power supply and demand.
+Grid-scale batteries co-located with generation can
+help mitigate this misalignment. This paper explores
+the use of reinforcement learning (RL) for operating
+grid-scale batteries co-located with solar power. Our
+results show RL achieves an average of 61% (and
+up to 96%) of the approximate theoretical optimal
+(non-causal) operation, outperforming advanced
+control methods on average. Our findings suggest
+RL may be preferred when future signals are hard to
+predict. Moreover, RL has two significant advantages
+compared to simpler rules-based control: (1) that solar
+energy is more effectively shifted towards high demand
+periods, and (2) increased diversity of battery dispatch
+across different locations, reducing potential ramping
+issues caused by super-position of many similar actions.
+Keywords: Renewable energy, battery storage, PV
+generation, deep reinforcement learning, receding
+horizon control
+1. Introduction
+World-wide power sectors have seen ambitious
+decarbonization targets. Renewable energy sources,
+such as wind and solar power, offer low cost carbon-free
+electric power. However, their weather dependence
+means their output is intermittent – unlike traditional
+thermal power generation, whose output is controlled by
+fuel input. Energy storage, such as lithium-ion batteries,
+can ease the integration of renewables, charging when
+surplus energy is available and discharging when the
+renewables output is low [5].
+Locational marginal prices (LMPs) describe the
+value of an additional unit of generation at a given
+location. This price encapsulates both global and
+∗Suppor
+CONTENT_END
+
+REFERENCE [11]: Maximum Solar Energy Tracking Leverage HighDoF Robotics System with Deep Reinforcement Learning.pdf
+CONTENT_START:
+Maximum Solar Energy Tracking Leverage
+High-DoF Robotics System with Deep
+Reinforcement Learning
+Anjie Jiang 1,∗, Kangtong Mo 2, Satoshi Fujimoto 3, Michael Taylor 4, Sanjay Kumar 5, Chiotis Dimitrios 6, Emilia Ruiz 7
+1,∗North Carolina State University, USA
+2University of Illinois Urbana-Champaign, USA
+3Kyoto University, Japan
+4Monash University, Australia
+5Indian Institute of Technology, India
+6South East European University, North Macedonia
+7University of Buenos Aires, Argentina
+Abstract—Solar trajectory monitoring is a pivotal challenge
+in solar energy systems, underpinning applications such as
+autonomous energy harvesting and environmental sensing. A
+prevalent failure mode in sustained solar tracking arises when the
+predictive algorithm erroneously diverges from the solar locus, er-
+roneously anchoring to extraneous celestial or terrestrial features.
+This phenomenon is attributable to an inadequate assimilation of
+solar-specific objectness attributes within the tracking paradigm.
+To mitigate this deficiency inherent in extant methodologies, we
+introduce an innovative objectness regularization framework that
+compels tracking points to remain confined within the delineated
+boundaries of the solar entity. By encapsulating solar objectness
+indicators during the training phase, our approach obviates the
+necessity for explicit solar mask computation during operational
+deployment. Furthermore, we leverage the high-DoF robot arm
+to integrate our method to improve its robustness and flexibility
+in different outdoor environments.
+Index Terms — sun tracking, solar energy, motion capture,
+robotics system, CNN, deep learning
+I. I NTRODUCTION
+In advanced robotics, the precise tracking of the solar
+trajectory presents a formidable challenge, particularly within
+outdoor environments characterized by stochastic weather
+patterns and fluctuating illumination conditions. High-DoF
+(Degrees of Freedom) robotic systems [1] endowed with
+intricate kinematic architectures are uniquely po
+CONTENT_END
+
+REFERENCE [12]: Reinforcement learningbased dynamic cleaning scheduling framework for solar ener.pdf
+CONTENT_START:
+1 
+Reinforcement learning-based dynamic cleaning scheduling framework for solar energy 
+system 
+ 
+Heungjo An1 
+ 
+Department of Industrial Engineering, Kumoh National Institute of Technology, Gumi City, South Korea 
+ 
+Abstract 
+Advancing autonomous green technologies in solar photovoltaic (PV) systems is key to improving sustainability and efficiency 
+in renewable energy production. This study presents a reinforcement learning (RL)-based framework to autonomously optimize 
+the cleaning schedules of PV panels in arid regions, where soiling from dust and other airborne particles significantly reduces 
+energy output. By employing advanced RL algorithms, Proximal Policy Optimization (PPO) and Soft Actor-Critic (SAC), the 
+framework dynamically adjusts cleaning intervals based on uncertain environmental conditions. The proposed approach was 
+applied to a case study in Abu Dhabi, UAE, demonstrating that PPO outperformed SAC and traditional simulation optimization 
+(Sim-Opt) methods, achieving up to 13% cost savings by dynamically responding to weather uncertainties. The results highlight 
+the superiority of flexible, autonomous scheduling over fixed -interval methods, particularly in adapting to stochastic 
+environmental dynamics. This aligns with the goals of autonomous green energy production by reducing operational costs and 
+improving the efficiency of solar power generation systems. This work underscores the potential of RL-driven autonomous 
+decision-making to optimize maintenance operations in renewable energy systems. In future research, it is important to enhance 
+the generalization ability of the proposed RL model, while also considering additional factors and constraints to apply it to 
+different regions. 
+ 
+Key Words 
+Solar energy, reinforcement learning, dynamic cleaning scheduling, weather uncertainty, soiling 
+ 
+1. Introduction 
+Solar PV systems rely heavily on solar irradiance for power generation, making arid regions with high irradiance levels 
+prime loca
+CONTENT_END
+
+REFERENCE [13]: s41598-025-10831-3.pdf
+CONTENT_START:
+A machine learning approach to 
+assess the climate change impacts 
+on single and dual-axis tracking 
+photovoltaic systems
+Udit Mamodiya1, Indra Kishor2, Priyam Ganguly3, Isha Mukherjee4 & Nithesh Naik5
+Solar tracking system efficiency is affected by climate variability, and adaptive mechanisms must 
+be employed to maximize energy output. Conventional fixed-tilt, single-axis, and dual-axis tracking 
+techniques are not real-time adaptive, resulting in energy loss. This paper introduces COMLAT 
+(Climate-Optimized Machine Learning Adaptive Tracking), an AI solar tracking system that employs 
+climate prediction using CNN-LSTM for climate prediction, XGBoost for estimation of energy yield, 
+and Deep Q-Learning (DQL) for real-time tracking control for solar efficiency optimization. One-year 
+experimental research from January 2024 to January 2025 was conducted at Sitapura, Jaipur, India, 
+with comparative studies of COMLAT and traditional tracking systems for seasonal variations and 
+cloud cover conditions. Results confirm the 55% increase in energy production compared to fixed-tilt 
+installations and 15–20% compared to dual-axis tracking due to its AI-based flexibility. The constructed 
+model achieved 10-day solar irradiance forecasting with an RMSE of 23.5 W/m², outperforming the 
+conventional LSTM and GRU baselines. XGBoost made predictions of energy output with an R² score of 
+0.94. COMLAT’s reinforcement learning controller optimized tracking angles with sub-second latency 
+while minimizing mechanical movement. The integration of hybrid artificial intelligence models allows 
+COMLAT to continuously update its tracking angles in real time and is a scalable and industrially viable 
+solution for smart grids, solar farms, and hybrid renewable energy systems. Increasing computational 
+efficiency, integrating energy storage mechanisms, and optimizing self-learning algorithms will be 
+areas of focus for future research to make it more applicable.
+Keywords Solar tracking, Dee
+CONTENT_END
+
+REFERENCE [14]: SOLARRL SemiOnline Longhorizon Assignment Reinforcement Learning.pdf
+CONTENT_START:
+SOLAR-RL: Semi-Online Long-horizon Assignment Reinforcement
+Learning
+Jichao Wang125 * Liuyang Bian1* Yufeng Zhou14* Han Xiao13
+Yue Pan1 Guozhi Wang1 Hao Wang15 Zhaoxiong Wang1
+Yafei Wen1 Xiaoxin Chen1 Shuai Ren1† Lingfang Zeng2‡
+1vivo AI Lab 2Zhejiang Lab 3CUHK MMLab 4Hubei University
+5Hangzhou Institute for Advanced Study, University of Chinese Academy of Sciences
+{wangjichao23}@mails.ucas.ac.cn
+Abstract
+As Multimodal Large Language Models
+(MLLMs) mature, GUI agents are evolving
+from static interactions to complex naviga-
+tion. While Reinforcement Learning (RL) has
+emerged as a promising paradigm for training
+MLLM agents on dynamic GUI tasks, its ef-
+fective application faces a dilemma. Standard
+Offline RL often relies on static step-level data,
+neglecting global trajectory semantics such as
+task completion and execution quality. Con-
+versely, Online RL captures the long-term dy-
+namics but suffers from high interaction costs
+and potential environmental instability. To
+bridge this gap, we propose SOLAR-RL (Semi-
+OnlineLong-horizonAssignmentRL). Instead
+of relying solely on expensive online interac-
+tions, our framework integrates global trajec-
+tory insights directly into the offline learning
+process. Specifically, we reconstruct diverse
+rollout candidates from static data, detect the
+first failure point using per-step validity sig-
+nals, and retroactively assign dense step-level
+rewards with target-aligned shaping to reflect
+trajectory-level execution quality—effectively
+simulating online feedback without interac-
+tion costs. Extensive experiments demon-
+strate that SOLAR-RL significantly improves
+long-horizon task completion rates and robust-
+ness compared to strong baselines, offering a
+sample-efficient solution for autonomous GUI
+navigation.
+1 Introduction
+The development of autonomous agents capable
+of mastering Graphical User Interfaces (GUIs) is a
+pivotal frontier in multimodal AI. Unlike traditional
+agents confined to specific APIs or DOM-tree pars-
+ing, mo
+CONTENT_END
+

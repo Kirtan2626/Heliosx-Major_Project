@@ -3,6 +3,7 @@ from datetime import datetime, timedelta
 from src.physics_engine.solar_core import get_solar_position, get_clear_sky_dni
 from src.physics_engine.obstacle_engine import calculate_shadow_factor
 from src.physics_engine.panel_feedback import calculate_energy
+from src.physics_engine.horizon_dem import is_sun_visible
 from src.heliosx_ai_policy import HeliosXPolicy
 from src.physics_engine.fault_diagnosis import classify_faults
 from src.services.commercial_impact import calculate_impact
@@ -34,10 +35,28 @@ def build_cartesian_context(base_lat: float, base_lon: float, context_data: dict
             # Fallback to a square slightly North if no geometry
             poly = [(-5, 5), (5, 5), (5, 15), (-5, 15)]
             
+        # Robust Height Extraction (m, levels, or fallback)
+        tags = b.get("tags", {})
+        height = 10.0
+        try:
+            if "height" in tags:
+                # Handle cases like "15m" or "45'"
+                h_str = str(tags["height"]).lower()
+                if "m" in h_str:
+                    height = float(h_str.replace("m", "").strip())
+                elif "'" in h_str: # feet
+                    height = float(h_str.replace("'", "").strip()) * 0.3048
+                else:
+                    height = float(h_str)
+            elif "building:levels" in tags:
+                height = float(tags["building:levels"]) * 3.5 # ~3.5m per level
+        except:
+            height = 12.0 # Default industrial height
+            
         obstacles.append({
             "type": "building", 
             "polygon": poly, 
-            "z_height": float(b.get("tags", {}).get("height", 10.0))
+            "z_height": height
         })
         
     for t in context_data.get("trees", []):
@@ -47,8 +66,8 @@ def build_cartesian_context(base_lat: float, base_lon: float, context_data: dict
             obstacles.append({
                 "type": "tree",
                 "point": (x, y),
-                "radius": 2.0,
-                "z_height": 5.0
+                "radius": 2.5,
+                "z_height": 6.0
             })
     return obstacles
 
@@ -58,6 +77,9 @@ def run_simulation(lat: float, lon: float, weather: dict, context: dict, start_d
         start_dt = datetime.now().replace(hour=0, minute=0, second=0, microsecond=0)
     
     obstacles = build_cartesian_context(lat, lon, context)
+    
+    # Terrain horizon data (optional)
+    horizon = kwargs.get("horizon", None)
     
     results = []
     total_fixed, total_tracker, total_ai = 0.0, 0.0, 0.0
@@ -70,10 +92,18 @@ def run_simulation(lat: float, lon: float, weather: dict, context: dict, start_d
         
         # 1. Solar Math
         alt, az = get_solar_position(lat, lon, utc_offset, dt)
-        dni = get_clear_sky_dni(alt, 100.0) # assume 100m site alt
+        
+        # Check terrain visibility
+        sun_visible = True
+        if horizon is not None:
+            sun_visible = is_sun_visible(alt, az, horizon)
+        elif alt <= 0:
+            sun_visible = False
+            
+        dni = get_clear_sky_dni(alt, 100.0) if sun_visible else 0.0
         
         # 2. Shadows
-        shadow = calculate_shadow_factor(alt, az, obstacles)
+        shadow = calculate_shadow_factor(alt, az, obstacles) if sun_visible else 0.0
         
         # 3. AI Policy
         temp_c = weather.get("temperatureC", 25.0)
@@ -115,6 +145,7 @@ def run_simulation(lat: float, lon: float, weather: dict, context: dict, start_d
         results.append({
             "time": dt.strftime("%H:%M"),
             "sun_alt": round(alt, 2),
+            "sun_az": round(az, 2),
             "shadow": shadow,
             "action": action["mode"],
             "energy_ai": round(e_ai, 2),

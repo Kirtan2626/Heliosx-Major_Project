@@ -1,0 +1,17 @@
+# Ablation A3: Tilt-only (7 actions)
+# Tests the value of azimuth control
+# Inherits all other settings from default.yaml
+
+experiment:
+  name: "ablation_tilt_only"
+
+actions:
+  dim: 7
+  action_table:
+    - { tilt_bias: -15, az_bias: 0, mode: "track" }
+    - { tilt_bias: -10, az_bias: 0, mode: "track" }
+    - { tilt_bias: -5,  az_bias: 0, mode: "track" }
+    - { tilt_bias: 0,   az_bias: 0, mode: "track" }
+    - { tilt_bias: 5,   az_bias: 0, mode: "track" }
+    - { tilt_bias: 10,  az_bias: 0, mode: "track" }
+    - { tilt_bias: 15,  az_bias: 0, mode: "track" }

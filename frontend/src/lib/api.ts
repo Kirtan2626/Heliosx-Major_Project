@@ -6,17 +6,17 @@ export const api = axios.create({
     baseURL: API_BASE_URL,
 });
 
-export const fetchWeather = async (lat: number, lon: float) => {
+export const fetchWeather = async (lat: number, lon: number) => {
     const response = await api.get(`/weather?lat=${lat}&lon=${lon}`);
     return response.data;
 };
 
-export const fetchSiteContext = async (lat: number, lon: float) => {
+export const fetchSiteContext = async (lat: number, lon: number) => {
     const response = await api.get(`/site-context?lat=${lat}&lon=${lon}`);
     return response.data;
 };
 
-export const runSimulation = async (lat: number, lon: float, tariff: number = 0.15) => {
+export const runSimulation = async (lat: number, lon: number, tariff: number = 0.15) => {
     const response = await api.post(`/simulate?lat=${lat}&lon=${lon}&tariff=${tariff}`);
     return response.data;
 };

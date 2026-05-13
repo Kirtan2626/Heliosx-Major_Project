@@ -25,6 +25,7 @@ class UnifiedEnvironmentalPayload(BaseModel):
 class TimeSeriesEntry(BaseModel):
     time: str
     sun_alt: float
+    sun_az: float
     shadow: float
     action: str
     energy_ai: float

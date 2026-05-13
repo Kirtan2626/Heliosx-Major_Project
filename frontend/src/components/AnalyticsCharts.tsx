@@ -6,10 +6,12 @@ interface Props {
 }
 
 export default function AnalyticsCharts({ data, currentIndex }: Props) {
+  if (!data || data.length === 0) return <div className="h-48 flex items-center justify-center text-slate-500">No telemetry data</div>;
+  
   const currentDataPoint = data[currentIndex];
   
   return (
-    <div className="w-full h-48">
+    <div className="w-full h-48" style={{ minHeight: '192px' }}>
       <ResponsiveContainer width="100%" height="100%">
         <LineChart data={data} margin={{ top: 5, right: 5, left: -20, bottom: 0 }}>
           <XAxis dataKey="time" stroke="#64748b" fontSize={10} tickFormatter={(val, i) => i % 6 === 0 ? val : ''} />

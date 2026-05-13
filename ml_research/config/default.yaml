@@ -1,0 +1,99 @@
+# config/default.yaml — Complete hyperparameters
+# Every value here appears in the paper's methodology table
+
+experiment:
+  name: "helios_x_v2_main"
+  seed: 42
+  device: "cpu"
+
+state:
+  dim: 14
+
+actions:
+  dim: 13
+  # Action table:
+  # 0-6: tilt biases (-15, -10, -5, 0, +5, +10, +15)
+  # 7-8: azimuth biases (-15, +15)
+  # 9-10: combined (tilt+10/az+10, tilt+10/az-10)
+  # 11: stow mode
+  # 12: diffuse mode
+  action_table:
+    - { tilt_bias: -15, az_bias: 0, mode: "track" }
+    - { tilt_bias: -10, az_bias: 0, mode: "track" }
+    - { tilt_bias: -5,  az_bias: 0, mode: "track" }
+    - { tilt_bias: 0,   az_bias: 0, mode: "track" }   # pure physics tracking
+    - { tilt_bias: 5,   az_bias: 0, mode: "track" }
+    - { tilt_bias: 10,  az_bias: 0, mode: "track" }
+    - { tilt_bias: 15,  az_bias: 0, mode: "track" }
+    - { tilt_bias: 0,   az_bias: -15, mode: "track" }
+    - { tilt_bias: 0,   az_bias: 15,  mode: "track" }
+    - { tilt_bias: 10,  az_bias: 10,  mode: "track" }
+    - { tilt_bias: 10,  az_bias: -10, mode: "track" }
+    - { tilt_bias: 0,   az_bias: 0, mode: "stow" }
+    - { tilt_bias: 0,   az_bias: 0, mode: "diffuse" }
+
+network:
+  hidden_layers: [128, 128, 64]
+  activation: "relu"
+
+training:
+  algorithm: "Double DQN"
+  optimizer: "Adam"
+  learning_rate: 0.0003
+  gamma: 0.95
+  tau: 0.005
+  batch_size: 64
+  replay_buffer_size: 50000
+  min_replay_size: 1000
+  max_grad_norm: 1.0
+  loss: "smooth_l1"
+
+exploration:
+  epsilon_start: 1.0
+  epsilon_end: 0.01
+  epsilon_decay_steps: 20000
+
+budget:
+  episodes_per_city: 1000
+  total_episodes: 6000
+  checkpoint_every: 100
+  eval_every: 200
+
+reward:
+  shadow_escape_bonus: 10.0
+  partial_improvement_bonus: 5.0
+  unnecessary_bias_penalty: -3.0
+  stow_correct_bonus: 5.0
+  stow_incorrect_penalty: -20.0
+  diffuse_correct_bonus: 3.0
+  diffuse_incorrect_penalty: -10.0
+
+warmstart:
+  enabled: true
+  pretrain_epochs: 80
+  pretrain_lr: 0.001
+
+evaluation:
+  eval_dates_per_city: 5
+  baselines: ["fixed_tilt", "deterministic", "tabular_ql"]
+  statistical_test: "wilcoxon_signed_rank"
+  significance_level: 0.05
+
+environment:
+  timestep_hours: 0.5
+  panel_efficiency: 0.195
+  panel_area_m2: 2.0
+
+data:
+  years: [2020, 2021, 2022, 2023, 2024]
+  nasa_power_params:
+    - "ALLSKY_SFC_SW_DNI"
+    - "ALLSKY_SFC_SW_DWN"
+    - "ALLSKY_SFC_SW_DIFF"
+    - "CLRSKY_SFC_SW_DNI"
+    - "T2M"
+    - "RH2M"
+    - "WS2M"
+    - "CLOUD_AMT"
+  osm_search_radius_m: 200
+  gap_fill_max_hours: 3

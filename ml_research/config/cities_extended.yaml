@@ -1,0 +1,120 @@
+# Helios-X v2 — 11-city Köppen-spanning training set
+# Used by the regime-conditioned single model (Section 11.6 / 11.7).
+#
+# All cities here are sourced exclusively from free datasets:
+#   NASA POWER, Open-Meteo, OpenAQ, OSM Buildings, PVGIS.
+# Adding more cities is a config change, not a code change — every
+# downloader in data_pipeline/ already parameterises on (lat, lon).
+
+cities:
+
+  # ---- original six (Helios-X v1) ----
+  - name: new_york
+    lat:  40.7128
+    lon: -74.0060
+    timezone: America/New_York
+    koppen: Dfa
+    regime_label: temperate_continental
+    status: existing
+
+  - name: london
+    lat:  51.5074
+    lon:  -0.1278
+    timezone: Europe/London
+    koppen: Cfb
+    regime_label: maritime_low_irradiance
+    status: existing
+
+  - name: dubai
+    lat:  25.2048
+    lon:  55.2708
+    timezone: Asia/Dubai
+    koppen: BWh
+    regime_label: arid_high_irradiance
+    status: existing
+
+  - name: delhi
+    lat:  28.6139
+    lon:  77.2090
+    timezone: Asia/Kolkata
+    koppen: BSh
+    regime_label: monsoon_aerosol
+    status: existing
+
+  - name: tokyo
+    lat:  35.6762
+    lon: 139.6503
+    timezone: Asia/Tokyo
+    koppen: Cfa
+    regime_label: humid_subtropical
+    status: existing
+
+  - name: sydney
+    lat: -33.8688
+    lon: 151.2093
+    timezone: Australia/Sydney
+    koppen: Cfa
+    regime_label: southern_temperate
+    status: existing
+
+  # ---- five new cities (Helios-X v2.1, expanded coverage) ----
+  - name: singapore
+    lat:    1.3521
+    lon:  103.8198
+    timezone: Asia/Singapore
+    koppen: Af
+    regime_label: equatorial_tropical
+    status: new
+
+  - name: cairo
+    lat:  30.0444
+    lon:  31.2357
+    timezone: Africa/Cairo
+    koppen: BWh
+    regime_label: arid_high_irradiance_2
+    status: new
+
+  - name: athens
+    lat:  37.9838
+    lon:  23.7275
+    timezone: Europe/Athens
+    koppen: Csa
+    regime_label: mediterranean
+    status: new
+
+  - name: reykjavik
+    lat:  64.1466
+    lon: -21.9426
+    timezone: Atlantic/Reykjavik
+    koppen: Cfc
+    regime_label: subpolar_oceanic
+    status: new
+
+  - name: anchorage
+    lat:  61.2181
+    lon: -149.9003
+    timezone: America/Anchorage
+    koppen: Dfc
+    regime_label: subarctic
+    status: new
+
+# Köppen coverage summary (for the paper):
+#   Group A (tropical):    Singapore (Af)
+#   Group B (arid):        Dubai (BWh), Cairo (BWh), Delhi (BSh)
+#   Group C (temperate):   London (Cfb), Tokyo (Cfa), Sydney (Cfa),
+#                          Athens (Csa), Reykjavik (Cfc)
+#   Group D (continental): New York (Dfa), Anchorage (Dfc)
+#   Group E (polar):       intentionally omitted — negligible solar deployments
+
+regimes:
+  - temperate_continental
+  - maritime_low_irradiance
+  - arid_high_irradiance
+  - monsoon_aerosol
+  - humid_subtropical
+  - southern_temperate
+  - equatorial_tropical
+  - arid_high_irradiance_2
+  - mediterranean
+  - subpolar_oceanic
+  - subarctic

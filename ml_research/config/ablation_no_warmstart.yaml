@@ -1,0 +1,9 @@
+# Ablation A1: No warm-start
+# Tests the value of physics initialization
+# Inherits all other settings from default.yaml
+
+experiment:
+  name: "ablation_no_warmstart"
+
+warmstart:
+  enabled: false
